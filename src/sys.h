@@ -47,6 +47,7 @@ extern void terminal_writestring(char *data);
 extern void terminal_exec(char data[]);
 extern void terminal_prompt();
 
+extern void keyboard_init();
 extern void keyboard_handler();
 
 extern char* memcpy(void *dest, void *src, int n);
@@ -58,5 +59,7 @@ extern void outb(short _port, char _data);
 extern void append(char s[], char n);
 extern void backspace(char s[]);
 extern int strcmp(char s1[], char s2[]);
+extern char *substr(char *dst, char *src, int offset, int length);
+
 
 #endif

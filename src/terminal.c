@@ -113,10 +113,16 @@ void terminal_prompt() {
 }
 
 void terminal_exec(char data[]) {
-  if (strcmp(data, "hello") == 0) {
+  char temp[256];
+
+  if (strcmp(substr(temp, data, 0, 4), "echo") == 0) {
     terminal_setcolor(VGA_COLOR_WHITE);
-    terminal_writestring("hello!\n");
+    terminal_writestring(substr(temp, data, 5, strlen(data)));
+    terminal_writestring("\n");
     terminal_setcolor(VGA_COLOR_RED);
+  } else if (strcmp(substr(temp, data, 0, 4), "halt") == 0) {
+    terminal_writestring("\nHalting CPU. Later!\n");
+    asm volatile("hlt");
   }
   terminal_prompt();
 }

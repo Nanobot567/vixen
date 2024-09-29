@@ -59,3 +59,9 @@ int strcmp(char s1[], char s2[]) {
     }
     return s1[i] - s2[i];
 }
+
+char* substr(char *dst, char *src, int offset, int length) {
+    memcpy(dst, src + offset, length);
+    dst[length] = '\0';
+    return dst;
+}

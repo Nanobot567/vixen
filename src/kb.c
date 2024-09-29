@@ -37,6 +37,12 @@ int kb_flag = 0;
 
 char kbBuffer[256];
 
+void keyboard_init() {
+  for (int i = 0; i < 256; i++) {
+    kbBuffer[i] = '\x00';
+  }
+}
+
 void keyboard_handler() {
   int c = 0;
 
@@ -59,6 +65,7 @@ void keyboard_handler() {
         kbBuffer[i] = '\x00';
       }
     } else if (ch == KB_BACKSPACE) {
+      backspace(kbBuffer);
       terminal_write("\b", 1);
     } else {
       append(kbBuffer, ch);

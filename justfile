@@ -1,3 +1,5 @@
+# idk, i like just :3
+
 default:
   nasm -felf32 src/boot/boot.asm -o boot.o
 
