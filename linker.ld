@@ -1,4 +1,4 @@
-// also can't do linking to save my life!! yayyyy
+/* also can't do linking to save my life!! yayyyy */
 
 /* The bootloader will look at this image and start execution at the symbol
    designated as the entry point. */
