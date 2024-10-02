@@ -61,5 +61,19 @@ extern void backspace(char s[]);
 extern int strcmp(char s1[], char s2[]);
 extern char *substr(char *dst, char *src, int offset, int length);
 
+extern unsigned char century;
+extern unsigned char second;
+extern unsigned char minute;
+extern unsigned char hour;
+extern unsigned char day;
+extern unsigned char month;
+extern unsigned int year;
+
+extern void read_rtc();
+extern void wait_a_moment();
+
+extern void play_frequency(uint32_t frequency);
+extern void pcspk_stop();
+extern void beep();
 
 #endif

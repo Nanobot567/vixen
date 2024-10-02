@@ -7,6 +7,7 @@
 void kernel_main(void) {
   terminal_cls();
 
+  terminal_writestring("Initializing ISR...\n");
   terminal_writestring("Initializing keyboard...\n");
   keyboard_init();
   terminal_writestring("Finished! Loading...\n");
@@ -17,6 +18,8 @@ void kernel_main(void) {
   terminal_writestring("Vixen ");
   terminal_writestring(VERSION);
   terminal_writestring("\n\n");
+
+  beep();
 
   terminal_writestring("Hello, welcome to Vixen! This is a dumb little operating system. Have fun?\n\n");
 

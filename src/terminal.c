@@ -59,32 +59,32 @@ void terminal_putchar(char c) {
   char uc = c;
 
   switch (c) {
-    case '\n':
-      terminal_row++;
-      terminal_column = 0;
-      break;
+  case '\n':
+    terminal_row++;
+    terminal_column = 0;
+    break;
 
-    case '\b':
-      terminal_column -= 1;
-      terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
-      break;
+  case '\b':
+    terminal_column -= 1;
+    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+    break;
 
-    default:
-      terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
-      terminal_column++;
-    }
+  default:
+    terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
+    terminal_column++;
+  }
 
   if (terminal_column >= VGA_WIDTH) {
     terminal_column = 0;
     terminal_row++;
   }
 
-
   if (terminal_row >= VGA_HEIGHT) {
     int i, j;
     for (i = 0; i < VGA_WIDTH; i++) {
       for (j = 0; j < VGA_HEIGHT; j++) {
-        terminal_buffer[(j * VGA_WIDTH) + i] = terminal_buffer[((j + 1) * VGA_WIDTH) + i];
+        terminal_buffer[(j * VGA_WIDTH) + i] =
+            terminal_buffer[((j + 1) * VGA_WIDTH) + i];
       }
     }
 
@@ -104,13 +104,9 @@ void terminal_write(char *data, int size) {
   }
 }
 
-void terminal_writestring(char *data) {
-  terminal_write(data, strlen(data));
-}
+void terminal_writestring(char *data) { terminal_write(data, strlen(data)); }
 
-void terminal_prompt() {
-  terminal_writestring("VXN> ");
-}
+void terminal_prompt() { terminal_writestring("VXN> "); }
 
 void terminal_exec(char data[]) {
   char temp[256];
@@ -123,6 +119,8 @@ void terminal_exec(char data[]) {
   } else if (strcmp(substr(temp, data, 0, 4), "halt") == 0) {
     terminal_writestring("\nHalting CPU. Later!\n");
     asm volatile("hlt");
+  } else if (strcmp(substr(temp, data, 0, 3), "spk") == 0) {
+    beep();
   }
   terminal_prompt();
 }
