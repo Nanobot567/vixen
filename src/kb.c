@@ -33,32 +33,33 @@ const char kbdus[128] = {
     0, 0, 0, 0, 0, 0
 };
 
-int kb_flag = 0;
-
 char kbBuffer[256];
+char kbHeldBuffer[16];
 
 void keyboard_init() {
   for (int i = 0; i < 256; i++) {
     kbBuffer[i] = '\x00';
   }
+
+  for (int i = 0; i < 16; i++) {
+    kbHeldBuffer[i] = '\x00';
+  }
 }
 
 void keyboard_handler() {
-  int c = 0;
-
   char sc = inb(0x60);
 
   char ch = kbdus[(int)sc];
 
   if (sc & 0x80) {
-    if (kb_flag == 1) {
-      kb_flag = 0;
-    }
-  } else if (kb_flag == 0) {
+    backspace(kbHeldBuffer);
+  } else if (kbHeldBuffer[strlen(kbHeldBuffer) - 1] != ch) {
+    append(kbHeldBuffer, ch);
+
     if (ch == KB_ENTER) {
       terminal_setcolor(VGA_COLOR_GREEN);
       terminal_writestring("\xFB\n");
-      terminal_setcolor(VGA_COLOR_RED);
+      terminal_setcolor(terminal_user_color);
       terminal_exec(kbBuffer);
 
       for (int i = 0; i < 256; i++) {
@@ -72,6 +73,5 @@ void keyboard_handler() {
 
       terminal_write(&ch, 1);
     }
-    kb_flag = 1;
   }
 }

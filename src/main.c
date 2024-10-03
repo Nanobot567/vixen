@@ -7,14 +7,13 @@
 void kernel_main(void) {
   terminal_cls();
 
-  terminal_writestring("Initializing ISR...\n");
   terminal_writestring("Initializing keyboard...\n");
   keyboard_init();
   terminal_writestring("Finished! Loading...\n");
 
   terminal_cls();
 
-  terminal_setcolor(VGA_COLOR_RED);
+  terminal_setcolor(terminal_user_color);
   terminal_writestring("Vixen ");
   terminal_writestring(VERSION);
   terminal_writestring("\n\n");

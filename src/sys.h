@@ -38,6 +38,8 @@ enum VGA_COLOR {
 
 extern enum VGA_COLOR VGA_COLOR;
 
+extern int terminal_user_color;
+
 extern void terminal_cls(void);
 extern void terminal_setcolor(uint8_t color);
 extern void terminal_putentryat(char c, uint8_t color, int x, int y);
@@ -60,6 +62,9 @@ extern void append(char s[], char n);
 extern void backspace(char s[]);
 extern int strcmp(char s1[], char s2[]);
 extern char *substr(char *dst, char *src, int offset, int length);
+extern void reverse(char str[], int length);
+extern char *itoa(int num, char *str, int base);
+extern int atoi(char* str);
 
 extern unsigned char century;
 extern unsigned char second;

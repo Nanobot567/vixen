@@ -17,6 +17,8 @@ int terminal_column;
 uint8_t terminal_color;
 uint16_t *terminal_buffer;
 
+int terminal_user_color = VGA_COLOR_RED;
+
 void upd_csr(void) {
   unsigned temp;
 
@@ -38,7 +40,7 @@ void move_csr(int row, int col) {
 void terminal_cls(void) {
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+  terminal_color = vga_entry_color(terminal_user_color, VGA_COLOR_BLACK);
   terminal_buffer = (uint16_t *)0xB8000;
   for (int y = 0; y < VGA_HEIGHT; y++) {
     for (int x = 0; x < VGA_WIDTH; x++) {
@@ -106,7 +108,33 @@ void terminal_write(char *data, int size) {
 
 void terminal_writestring(char *data) { terminal_write(data, strlen(data)); }
 
-void terminal_prompt() { terminal_writestring("VXN> "); }
+void terminal_prompt() {
+  read_rtc();
+  char* temp2;
+
+  terminal_setcolor(VGA_COLOR_LIGHT_RED);
+
+  terminal_putchar('[');
+
+  itoa((int) hour, temp2, 10);
+  terminal_write(temp2, strlen(temp2));
+  
+  terminal_putchar(':');
+  
+  itoa((int) minute, temp2, 10);
+  terminal_write(temp2, strlen(temp2));
+
+  terminal_putchar(':');
+
+  itoa((int) second, temp2, 10);
+  terminal_write(temp2, strlen(temp2));
+
+  terminal_putchar(']');
+
+  terminal_setcolor(terminal_user_color);
+
+  terminal_writestring(" VXN> ");
+}
 
 void terminal_exec(char data[]) {
   char temp[256];
@@ -115,12 +143,26 @@ void terminal_exec(char data[]) {
     terminal_setcolor(VGA_COLOR_WHITE);
     terminal_writestring(substr(temp, data, 5, strlen(data)));
     terminal_writestring("\n");
-    terminal_setcolor(VGA_COLOR_RED);
+    terminal_setcolor(terminal_user_color);
   } else if (strcmp(substr(temp, data, 0, 4), "halt") == 0) {
     terminal_writestring("\nHalting CPU. Later!\n");
     asm volatile("hlt");
-  } else if (strcmp(substr(temp, data, 0, 3), "spk") == 0) {
+  } else if (strcmp(substr(temp, data, 0, 4), "beep") == 0) {
     beep();
+  } else if (strcmp(substr(temp, data, 0, 3), "cls") == 0) {
+    terminal_cls();
+    terminal_setcolor(terminal_user_color);
+  } else if (strcmp(substr(temp, data, 0, 5), "color") == 0) {
+    terminal_user_color = atoi(substr(temp, data, 6, strlen(data)));
+
+    if (terminal_user_color > 15) {
+      terminal_user_color = 15;
+    } else if (terminal_user_color < 0) {
+      terminal_user_color = 0;
+    }
+    
+    terminal_setcolor(terminal_user_color);
   }
+
   terminal_prompt();
 }

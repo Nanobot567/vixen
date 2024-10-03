@@ -24,7 +24,7 @@ void pcspk_stop() {
 }
 
 void beep() {
-  play_frequency(700);
+  play_frequency(1000);
   wait_a_moment();
   pcspk_stop();
 }
