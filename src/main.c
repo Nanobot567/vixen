@@ -1,28 +1,22 @@
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-#include "sys.h"
+#include "kernel/include/gdt.h"
+#include "kernel/include/terminal.h"
+#include "kernel/include/keyboard.h"
+#include "kernel/include/vga.h"
 
-void kernel_main(void) {
+#include "libc/include/stdio.h"
+
+void kernel_main() {
+  gdt_init();
+
   terminal_cls();
+  printf("Vixen v0.1\n\n");
 
-  terminal_writestring("Initializing keyboard...\n");
-  keyboard_init();
-  terminal_writestring("Finished! Loading...\n");
-
-  terminal_cls();
-
+  terminal_setcolor(VGA_COLOR_RED);
+  printf("[VXN] ");
   terminal_setcolor(terminal_user_color);
-  terminal_writestring("Vixen ");
-  terminal_writestring(VERSION);
-  terminal_writestring("\n\n");
-
-  beep();
-
-  terminal_writestring("Hello, welcome to Vixen! This is a dumb little operating system. Have fun?\n\n");
-
-  terminal_prompt();
 
   while(1) {
     keyboard_handler();

@@ -1,4 +1,23 @@
-#include "sys.h"
+#include "include/keyboard.h"
+#include "include/terminal.h"
+#include "include/vga.h"
+
+#include "../misc/include/ports.h"
+#include "../libc/include/string.h"
+#include "../libc/include/stdio.h"
+
+// TODO: move to new file pls
+void append(char s[], char n) {
+  int len = strlen(s);
+  s[len] = n;
+  s[len + 1] = '\0';
+}
+
+void backspace(char s[]) {
+  int len = strlen(s);
+  s[len - 1] = '\0';
+}
+
 
 #define KB_BACKSPACE 0x0E
 #define KB_ENTER 0x1C
@@ -58,20 +77,24 @@ void keyboard_handler() {
 
     if (ch == KB_ENTER) {
       terminal_setcolor(VGA_COLOR_GREEN);
-      terminal_writestring("\xFB\n");
+      printf("\xFB\n");
       terminal_setcolor(terminal_user_color);
-      terminal_exec(kbBuffer);
+      // terminal_exec(kbBuffer);
 
       for (int i = 0; i < 256; i++) {
         kbBuffer[i] = '\x00';
       }
+      
+      terminal_setcolor(VGA_COLOR_RED);
+      printf("[VXN] ");
+      terminal_setcolor(terminal_user_color);
     } else if (ch == KB_BACKSPACE) {
       backspace(kbBuffer);
-      terminal_write("\b", 1);
+      putchar('\b');
     } else {
       append(kbBuffer, ch);
 
-      terminal_write(&ch, 1);
+      putchar(ch);
     }
   }
 }

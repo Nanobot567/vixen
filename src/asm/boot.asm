@@ -64,7 +64,7 @@ _start:
 	; point instructions and instruction set extensions are not initialized
 	; yet. The GDT should be loaded here. Paging should be enabled here.
 	; C++ features such as global constructors and exceptions will require
-	; runtime support to work as well.
+	; runtime support to work as well. 
 
 	; Enter the high-level kernel. The ABI requires the stack is 16-byte
 	; aligned at the time of the call instruction (which afterwards pushes
