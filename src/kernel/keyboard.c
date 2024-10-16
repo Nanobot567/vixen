@@ -2,6 +2,7 @@
 #include "include/irq.h"
 #include "include/terminal.h"
 #include "include/vga.h"
+#include "include/timer.h"
 
 #include "../misc/include/ports.h"
 #include "../libc/include/string.h"

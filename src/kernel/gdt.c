@@ -48,8 +48,6 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit,
  *  to tell the processor where the new GDT is and update the
  *  new segment registers */
 void gdt_init() {
-  printf("");
-
   /* Setup the GDT pointer and limit */
   gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
   gp.base = (uint32_t)&gdt;

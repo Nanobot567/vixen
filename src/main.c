@@ -7,6 +7,8 @@
 #include "kernel/include/terminal.h"
 #include "kernel/include/keyboard.h"
 #include "kernel/include/vga.h"
+#include "kernel/include/timer.h"
+#include "kernel/include/audio.h"
 
 void kernel_main() {
 
@@ -17,8 +19,11 @@ void kernel_main() {
   gdt_init();
   idt_init();
   irq_init();
+  timer_init();
 
   printf("\nVixen v0.1\n\n");
+
+  beep();
 
   terminal_setcolor(VGA_COLOR_RED);
   printf("[VXN] ");
