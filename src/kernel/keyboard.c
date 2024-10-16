@@ -1,4 +1,5 @@
 #include "include/keyboard.h"
+#include "include/irq.h"
 #include "include/terminal.h"
 #include "include/vga.h"
 
@@ -56,6 +57,8 @@ char kbBuffer[256];
 char kbHeldBuffer[16];
 
 void keyboard_init() {
+  printf("Initializing keyboard...\n");
+
   for (int i = 0; i < 256; i++) {
     kbBuffer[i] = '\x00';
   }
@@ -63,6 +66,8 @@ void keyboard_init() {
   for (int i = 0; i < 16; i++) {
     kbHeldBuffer[i] = '\x00';
   }
+
+  irq_install_handler(1, keyboard_handler);
 }
 
 void keyboard_handler() {

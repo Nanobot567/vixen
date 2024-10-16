@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "../../libc/include/stdio.h"
 
-void gdt_create_descriptor(uint32_t base, uint32_t limit, uint16_t flag);
-void gdt_init(void);
+extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
+extern void gdt_init();
 
 #endif

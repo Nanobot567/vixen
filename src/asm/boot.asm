@@ -52,6 +52,14 @@ _start:
 	; itself. It has absolute and complete power over the
 	; machine.
 
+; fix_cs:
+  ; mov ax, 0x0010
+  ; mov ds, ax
+  ; mov es, ax
+  ; mov fs, ax
+  ; mov gs, ax
+  ; mov ss, ax
+
 	; To set up a stack, we set the esp register to point to the top of our
 	; stack (as it grows downwards on x86 systems). This is necessarily done
 	; in assembly as languages such as C cannot function without a stack.

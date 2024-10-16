@@ -1,11 +1,14 @@
 ; GDT stuff
-gdtr dw 0 ; for limit storage
-     dd 0 ; for base storage
-
-setGdt:
-   mov   ax, [esp + 4]
-   mov   [gdtr], ax
-   mov   eax, [esp + 8]
-   mov   [gdtr + 2], eax
-   lgdt  [gdtr]
-   ret
+global gdt_flush
+extern gp
+gdt_flush:
+    lgdt [gp]
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    jmp 0x08:flush2
+flush2:
+  ret
