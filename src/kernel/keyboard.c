@@ -7,6 +7,7 @@
 #include "../misc/include/ports.h"
 #include "../libc/include/string.h"
 #include "../libc/include/stdio.h"
+#include "../shell/include/shell.h"
 
 // TODO: move to new file pls
 void append(char s[], char n) {
@@ -85,7 +86,8 @@ void keyboard_handler() {
       terminal_setcolor(VGA_COLOR_GREEN);
       printf("\xFB\n");
       terminal_setcolor(terminal_user_color);
-      // terminal_exec(kbBuffer);
+
+      parse(kbBuffer);
 
       for (int i = 0; i < 256; i++) {
         kbBuffer[i] = '\x00';

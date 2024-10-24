@@ -12,6 +12,8 @@ default:
   i686-elf-gcc -c src/libc/string/* -ffreestanding -O2 -Wall -Wextra -I src/libc/include
 
   i686-elf-gcc -c src/misc/* -ffreestanding -O2 -Wall -Wextra -I src/misc/include/
+
+  i686-elf-gcc -c src/shell/* -ffreestanding -O2 -Wall -Wextra -I src/shell/include/
   
   i686-elf-gcc -c src/kernel/* -ffreestanding -O2 -Wall -Wextra -I src/kernel/include
 

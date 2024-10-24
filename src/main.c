@@ -9,9 +9,9 @@
 #include "kernel/include/vga.h"
 #include "kernel/include/timer.h"
 #include "kernel/include/audio.h"
+#include "libc/include/string.h"
 
 void kernel_main() {
-
   terminal_cls();
  
   keyboard_init();
@@ -22,8 +22,11 @@ void kernel_main() {
   timer_init();
 
   printf("\nVixen v0.1\n\n");
-
-  beep();
+ 
+  beep_freq_time(831, 0.1);
+  beep_freq_time(698, 0.1);
+  beep_freq_time(554, 0.1);
+  beep_freq_time(523, 0.1);
 
   terminal_setcolor(VGA_COLOR_RED);
   printf("[VXN] ");

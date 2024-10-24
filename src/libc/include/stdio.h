@@ -3,7 +3,11 @@
 
 #define EOF (-1)
 
-int printf(const char* __restrict, ...);
+// int printf(const char* __restrict, ...);
+
+#define printf printf_
+int printf_(const char* format, ...);
+
 int putchar(int);
 int puts(const char*);
 

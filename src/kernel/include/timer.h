@@ -9,5 +9,6 @@ void timer_phase(int hz);
 void sleep(double secs);
 
 extern int timer_ticks;
+extern int pit_freq;
 
 #endif
