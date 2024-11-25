@@ -1,7 +1,12 @@
 #include "../libc/include/string.h"
+#include "../libc/include/stdio.h"
 
 #include "../misc/include/ports.h"
+#include "../misc/include/strutils.h"
 
+#include "../shell/include/shell.h"
+
+#include "include/keyboard.h"
 #include "include/terminal.h"
 #include "include/vga.h"
 
@@ -104,3 +109,36 @@ void terminal_write(const char *data, size_t size) {
 }
 
 void terminal_writestring(const char *data) { terminal_write(data, strlen(data)); }
+
+void terminal_keyboard_handler(char sc, char ch) {
+  if (sc & 0x80) {
+    backspace(kbHeldBuffer);
+  } else if (kbHeldBuffer[strlen(kbHeldBuffer) - 1] != ch) {
+    append(kbHeldBuffer, ch);
+
+    if (ch == KB_ENTER) {
+      terminal_setcolor(VGA_COLOR_GREEN);
+      printf("\xFB\n");
+      terminal_setcolor(terminal_user_color);
+
+      parse(kbBuffer);
+
+      for (int i = 0; i < 256; i++) {
+        kbBuffer[i] = '\x00';
+      }
+      
+      terminal_setcolor(VGA_COLOR_RED);
+      printf("[VXN] ");
+      terminal_setcolor(terminal_user_color);
+    } else if (ch == KB_BACKSPACE) {
+      if (strlen(kbBuffer) != 0) {
+        backspace(kbBuffer);
+        putchar('\b');
+      }
+    } else {
+      append(kbBuffer, ch);
+
+      putchar(ch);
+    }
+  }
+}

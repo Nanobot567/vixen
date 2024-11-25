@@ -5,25 +5,9 @@
 #include "include/timer.h"
 
 #include "../misc/include/ports.h"
+
 #include "../libc/include/string.h"
 #include "../libc/include/stdio.h"
-#include "../shell/include/shell.h"
-
-// TODO: move to new file pls
-void append(char s[], char n) {
-  int len = strlen(s);
-  s[len] = n;
-  s[len + 1] = '\0';
-}
-
-void backspace(char s[]) {
-  int len = strlen(s);
-  s[len - 1] = '\0';
-}
-
-
-#define KB_BACKSPACE 0x0E
-#define KB_ENTER 0x1C
 
 const char kbdus[128] = {
     0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=', KB_BACKSPACE,
@@ -58,6 +42,14 @@ const char kbdus[128] = {
 char kbBuffer[256];
 char kbHeldBuffer[16];
 
+void kbNoHandler(char sc, char ch) {}
+
+kbHandler_t currentKeyboardHandler;
+
+void keyboard_push_handler(kbHandler_t h) {
+  currentKeyboardHandler = h;
+}
+
 void keyboard_init() {
   printf("Initializing keyboard...\n");
 
@@ -69,40 +61,14 @@ void keyboard_init() {
     kbHeldBuffer[i] = '\x00';
   }
 
+  keyboard_push_handler(terminal_keyboard_handler);
+
   irq_install_handler(1, keyboard_handler);
 }
 
 void keyboard_handler() {
   char sc = inb(0x60);
-
   char ch = kbdus[(int)sc];
 
-  if (sc & 0x80) {
-    backspace(kbHeldBuffer);
-  } else if (kbHeldBuffer[strlen(kbHeldBuffer) - 1] != ch) {
-    append(kbHeldBuffer, ch);
-
-    if (ch == KB_ENTER) {
-      terminal_setcolor(VGA_COLOR_GREEN);
-      printf("\xFB\n");
-      terminal_setcolor(terminal_user_color);
-
-      parse(kbBuffer);
-
-      for (int i = 0; i < 256; i++) {
-        kbBuffer[i] = '\x00';
-      }
-      
-      terminal_setcolor(VGA_COLOR_RED);
-      printf("[VXN] ");
-      terminal_setcolor(terminal_user_color);
-    } else if (ch == KB_BACKSPACE) {
-      backspace(kbBuffer);
-      putchar('\b');
-    } else {
-      append(kbBuffer, ch);
-
-      putchar(ch);
-    }
-  }
+  (*currentKeyboardHandler)(sc, ch);
 }

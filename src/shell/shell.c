@@ -2,6 +2,9 @@
 
 #include "../kernel/include/audio.h"
 #include "../kernel/include/timer.h"
+#include "../kernel/include/io.h"
+#include "../kernel/include/keyboard.h"
+#include "../kernel/include/terminal.h"
 #include "../libc/include/stdio.h"
 #include "../libc/include/string.h"
 #include "../misc/include/aconv.h"
@@ -19,6 +22,13 @@ bool contains_delim(char *str, char delim) {
 }
 
 unsigned char RAM_prgspace[2048];
+
+void ynThing(char sc, char ch) {
+  if (ch == 'y' || ch == 'n') {
+    printf("handler restored!!\n");
+    keyboard_push_handler(terminal_keyboard_handler);
+  }
+}
 
 int parse(char *input) {
   char *tmp;
@@ -94,6 +104,9 @@ int parse(char *input) {
     // TODO: execute bytes as scripting language instead of raw code
     void(*func_ptr)(void) = (void(*)(void)) &RAM_prgspace[0];
     func_ptr();
+  } else if (strcmp(cmd, "yorn") == 0) {
+    keyboard_push_handler(ynThing);
+    printf("\nwaiting for y or n...\n");
   } else if (strcmp(cmd, "uptime") == 0) {
     printf("up for ");
     printf(itoa(timer_ticks, tmp, 10));

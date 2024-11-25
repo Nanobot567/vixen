@@ -12,5 +12,6 @@ extern void terminal_putentryat(char c, uint8_t color, int x, int y);
 extern void terminal_putchar(char c);
 extern void terminal_write(const char *data, size_t size);
 extern void terminal_writestring(const char *data);
+extern void terminal_keyboard_handler(char sc, char ch);
 
 #endif

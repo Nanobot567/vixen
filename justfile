@@ -32,7 +32,7 @@ default:
 
   rm -rf isodir
 
-  qemu-system-i386 -cdrom vixenOS.iso -audiodev pa,id=snd0 -machine pcspk-audiodev=snd0 -rtc base=localtime
+  qemu-system-i386 -cdrom vixenOS.iso -device ahci,id=ahci -drive file=disk.img,id=disk,if=none,format=raw -device ide-hd,drive=disk,bus=ahci.0 -audiodev pa,id=snd0 -machine pcspk-audiodev=snd0 -rtc base=localtime
 
 clean:
   rm -rf *.ao
